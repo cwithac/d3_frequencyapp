@@ -1,3 +1,31 @@
+//Access input of form
+d3.select('form')
+  .on('submit', function() {
+    d3.event.preventDefault(); //prevents page reload
+    const input = d3.select('input');
+    const text = input.property('value');
+
+    d3.select('#letters')
+      .selectAll('.letter') //generates nodes
+      .data(getFrequencies(text))
+      .enter()
+      .append('div')
+        .classed('letter', true)
+        .style('width', '20px')
+        .style('line-height', '20px')
+        .style('margin-right', '5px')
+        .style('height', function(d) {
+          return d.count * 20 + 'px'; //increases height based on count value
+        })
+        .text(function(d) {
+          return d.character; //returns character in div
+        })
+
+      d3.select('#phrase')
+        .text('Analysis of: ' + text);
+  })
+
+//Get Frequency of Each Letter in a String
 function getFrequencies(str) {
   const sorted = str.split('').sort();
   const data = [];
