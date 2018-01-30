@@ -1,4 +1,16 @@
+//Reset Button
+d3.select('#reset')
+  .on('click', function() {
+    d3.selectAll('.letter')
+      .remove(); //Clears all letter nodes
 
+//Clears additional text
+    d3.select('#phrase')
+      .text('');
+
+    d3.select('#count')
+      .text('');
+  })
 
 //Access input of form
 d3.select('form')
