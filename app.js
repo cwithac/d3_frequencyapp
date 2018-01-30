@@ -23,6 +23,8 @@ d3.select('form')
 
       d3.select('#phrase')
         .text('Analysis of: ' + text);
+
+      input.property('value', '');
   })
 
 //Get Frequency of Each Letter in a String
