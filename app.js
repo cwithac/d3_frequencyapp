@@ -1,3 +1,5 @@
+
+
 //Access input of form
 d3.select('form')
   .on('submit', function() {
@@ -8,20 +10,22 @@ d3.select('form')
     const letters = d3.select('#letters')
                       .selectAll('.letter') //generates nodes
                       .data(getFrequencies(text), function(d) {
-                        return d.character;
+                        return d.character; //not by index
                       });
 
+//removes letters that are not counted++ in new word from previous word
       letters
           .classed('new', false)
         .exit()
         .remove();
 
+//adds new letters against the previous word
       letters
         .enter()
         .append('div')
           .classed('letter', true)
           .classed('new', true)
-        .merge(letters)
+        .merge(letters) //merges two data sets together (current word, previous word)
           .style('width', '20px')
           .style('line-height', '20px')
           .style('margin-right', '5px')
@@ -32,12 +36,14 @@ d3.select('form')
             return d.character; //returns character in div
           })
 
+//Additional text input
       d3.select('#phrase')
         .text('Analysis of: ' + text);
 
       d3.select('#count')
         .text("(New characters: " + letters.enter().nodes().length + ")");
 
+//Clear form input
       input.property('value', '');
   })
 
