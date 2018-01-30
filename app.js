@@ -5,24 +5,38 @@ d3.select('form')
     const input = d3.select('input');
     const text = input.property('value');
 
-    d3.select('#letters')
-      .selectAll('.letter') //generates nodes
-      .data(getFrequencies(text))
-      .enter()
-      .append('div')
-        .classed('letter', true)
-        .style('width', '20px')
-        .style('line-height', '20px')
-        .style('margin-right', '5px')
-        .style('height', function(d) {
-          return d.count * 20 + 'px'; //increases height based on count value
-        })
-        .text(function(d) {
-          return d.character; //returns character in div
-        })
+    const letters = d3.select('#letters')
+                      .selectAll('.letter') //generates nodes
+                      .data(getFrequencies(text), function(d) {
+                        return d.character;
+                      });
+
+      letters
+          .classed('new', false)
+        .exit()
+        .remove();
+
+      letters
+        .enter()
+        .append('div')
+          .classed('letter', true)
+          .classed('new', true)
+        .merge(letters)
+          .style('width', '20px')
+          .style('line-height', '20px')
+          .style('margin-right', '5px')
+          .style('height', function(d) {
+            return d.count * 20 + 'px'; //increases height based on count value
+          })
+          .text(function(d) {
+            return d.character; //returns character in div
+          })
 
       d3.select('#phrase')
         .text('Analysis of: ' + text);
+
+      d3.select('#count')
+        .text("(New characters: " + letters.enter().nodes().length + ")");
 
       input.property('value', '');
   })
