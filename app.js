@@ -1,3 +1,11 @@
+const width = 800;
+const height = 400;
+const barPadding = 10;
+
+const svg = d3.select('svg')
+                .attr('width', width)
+                .attr('height', height);
+
 //Reset Button
 d3.select('#reset')
   .on('click', function() {
@@ -18,8 +26,10 @@ d3.select('form')
     d3.event.preventDefault(); //prevents page reload
     const input = d3.select('input');
     const text = input.property('value');
+    const data = getFrequencies(text);
+    const barWidth = width / data.length - barPadding;
 
-    const letters = d3.select('#letters')
+    const letters = svg
                       .selectAll('.letter') //generates nodes
                       .data(getFrequencies(text), function(d) {
                         return d.character; //not by index
@@ -34,18 +44,19 @@ d3.select('form')
 //adds new letters against the previous word
       letters
         .enter()
-        .append('div')
+        .append('rect')
           .classed('letter', true)
           .classed('new', true)
         .merge(letters) //merges two data sets together (current word, previous word)
-          .style('width', '20px')
-          .style('line-height', '20px')
-          .style('margin-right', '5px')
+          .style('width', barWidth)
           .style('height', function(d) {
-            return d.count * 20 + 'px'; //increases height based on count value
+            return d.count * 20; //increases height based on count value
           })
-          .text(function(d) {
-            return d.character; //returns character in div
+          .attr('x', function(d, i) {
+            return (barWidth + barPadding) * i;
+          })
+          .attr('y', function(d){
+            return height - d.count * 20;
           })
 
 //Additional text input
